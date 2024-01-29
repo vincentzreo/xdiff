@@ -3,6 +3,8 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use tokio::fs;
 use url::Url;
+
+use crate::ExtraArgs;
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct DiffConfig {
     #[serde(flatten)]
@@ -54,10 +56,8 @@ impl DiffConfig {
     }
 }
 
-pub struct DiffArgs {}
-
 impl DiffProfile {
-    pub async fn diff(&self, _args: DiffArgs) -> anyhow::Result<String> {
+    pub async fn diff(&self, args: ExtraArgs) -> anyhow::Result<String> {
         // let res1 = self.req1.send(&args).await?;
         // let res2 = self.req2.send(&args).await?;
 
@@ -65,7 +65,8 @@ impl DiffProfile {
         // let text2 = res2.filter_text(&self.res).await?;
 
         // text_diff(&text1, &text2);
-
-        todo!()
+        println!("profile: {:?}", self);
+        println!("args: {:?}", args);
+        Ok("".to_string())
     }
 }
