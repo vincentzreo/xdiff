@@ -79,7 +79,7 @@ impl RequestProfile {
 }
 
 impl ResponseExt {
-    pub async fn filter_text(self, profile: &ResponseProfile) -> Result<String> {
+    pub async fn get_text(self, profile: &ResponseProfile) -> Result<String> {
         let mut output = String::new();
         let res = self.0;
         output.push_str(&format!("{:?} {}\n", res.version(), res.status()));

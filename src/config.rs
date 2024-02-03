@@ -42,8 +42,8 @@ impl DiffProfile {
         let res1 = self.req1.send(&args).await?;
         let res2 = self.req2.send(&args).await?;
 
-        let text1 = res1.filter_text(&self.res).await?;
-        let text2 = res2.filter_text(&self.res).await?;
+        let text1 = res1.get_text(&self.res).await?;
+        let text2 = res2.get_text(&self.res).await?;
         // println!("{}", text1);
         // println!("{}", text2);
 
