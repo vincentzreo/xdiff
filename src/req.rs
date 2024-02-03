@@ -80,17 +80,9 @@ impl RequestProfile {
 
 impl ResponseExt {
     pub async fn get_text(self, profile: &ResponseProfile) -> Result<String> {
-        let mut output = String::new();
         let res = self.0;
-        output.push_str(&format!("{:?} {}\n", res.version(), res.status()));
-        let headers = res.headers();
-        for (k, v) in headers.iter() {
-            if !profile.skip_headers.iter().any(|sh| sh == k.as_str()) {
-                output.push_str(&format!("{}: {:?}\n", k, v));
-            }
-        }
-        output.push_str("\n");
-        let content_type = get_content_type(&headers);
+        let mut output = get_head_text(&res, &profile.skip_headers)?;
+        let content_type = get_content_type(&res.headers());
         let text = res.text().await?;
         match content_type.as_deref() {
             Some("application/json") => {
@@ -103,6 +95,19 @@ impl ResponseExt {
         }
         Ok(output)
     }
+}
+
+fn get_head_text(res: &Response, skip_headers: &[String]) -> Result<String> {
+    let mut output = String::new();
+    output.push_str(&format!("{:?} {}\n", res.version(), res.status()));
+    let headers = res.headers();
+    for (k, v) in headers.iter() {
+        if !skip_headers.iter().any(|sh| sh == k.as_str()) {
+            output.push_str(&format!("{}: {:?}\n", k, v));
+        }
+    }
+    output.push_str("\n");
+    Ok(output)
 }
 
 fn get_content_type(headers: &HeaderMap) -> Option<String> {
